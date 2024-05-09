@@ -1,0 +1,56 @@
+import random
+
+def get_choice():
+    return input("Escolha pedra, papel ou tesoura: ").lower()
+
+def ai_choice(level, last_player_choice):
+    if level == 1:
+        return random.choice(['pedra', 'papel', 'tesoura'])
+    elif level == 2:
+        # Nível 2: Escolhe a opção que vence a última jogada do jogador
+        if last_player_choice == 'pedra':
+            return 'papel'
+        elif last_player_choice == 'papel':
+            return 'tesoura'
+        else:
+            return 'pedra'
+    else:
+        # Nível 3 ou superior: Estratégia aleatória
+        return random.choice(['pedra', 'papel', 'tesoura'])
+
+def determine_winner(player_choice, ai_choice):
+    if player_choice == ai_choice:
+        return "Empate"
+    elif (player_choice == 'pedra' and ai_choice == 'tesoura') or \
+         (player_choice == 'papel' and ai_choice == 'pedra') or \
+         (player_choice == 'tesoura' and ai_choice == 'papel'):
+        return "Você venceu!"
+    else:
+        return "Você perdeu."
+
+def main():
+    level = 1
+    while True:
+        print("\nNível:", level)
+        player_choice = get_choice()
+        if player_choice not in ['pedra', 'papel', 'tesoura']:
+            print("Escolha inválida. Tente novamente.")
+            continue
+        
+        ai_choice_val = ai_choice(level, player_choice)
+        print("A IA escolheu:", ai_choice_val)
+        
+        print(determine_winner(player_choice, ai_choice_val))
+        
+        # Aumenta o nível a cada 3 rodadas bem sucedidas
+        if determine_winner(player_choice, ai_choice_val) == "Você venceu!":
+            level = min(3, level + 1)
+        else:
+            level = max(1, level - 1)
+        
+        play_again = input("Deseja jogar novamente? (s/n): ").lower()
+        if play_again != 's':
+            break
+
+if __name__ == "__main__":
+    main()
